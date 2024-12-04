@@ -37,10 +37,7 @@ export const genCompilerSfcLink = (version: string) => {
   )
 }
 
-export const genImportMap = (
-  { vue, elementPlus }: Partial<Versions> = {},
-  nightly: boolean,
-): ImportMap => {
+export const genImportMap = ({ vue, fabric }: Partial<Versions> = {}): ImportMap => {
   const deps: Record<string, Dependency> = {
     vue: {
       pkg: '@vue/runtime-dom',
@@ -51,19 +48,10 @@ export const genImportMap = (
       version: vue,
       path: '/dist/shared.esm-bundler.js',
     },
-    'element-plus': {
-      pkg: nightly ? '@element-plus/nightly' : 'element-plus',
-      version: elementPlus,
-      path: '/dist/index.full.min.mjs',
-    },
-    'element-plus/': {
-      pkg: 'element-plus',
-      version: elementPlus,
-      path: '/',
-    },
-    '@element-plus/icons-vue': {
-      version: '2',
-      path: '/dist/index.min.js',
+    fabric: {
+      pkg: 'fabric',
+      version: fabric,
+      path: '/dist/fabric.min.mjs',
     },
   }
 
@@ -91,7 +79,7 @@ export const getVersions = (pkg: MaybeRef<string>) => {
 export const getSupportedVueVersions = () => {
   const versions = getVersions('vue')
   return computed(() =>
-    versions.value.filter((version) => gte(version, '3.2.0')),
+    versions.value.filter((version) => gte(version, '3.5.0')),
   )
 }
 
@@ -99,18 +87,19 @@ export const getSupportedTSVersions = () => {
   const versions = getVersions('typescript')
   return computed(() =>
     versions.value.filter(
-      (version) => !version.includes('dev') && !version.includes('insiders'),
+      (version) =>
+        !version.includes('dev') &&
+        !version.includes('beta') &&
+        !version.includes('rc') &&
+        !version.includes('insiders') &&
+        gte(version, '3.5.0'),
     ),
   )
 }
 
-export const getSupportedEpVersions = (nightly: MaybeRef<boolean>) => {
-  const pkg = computed(() =>
-    unref(nightly) ? '@element-plus/nightly' : 'element-plus',
-  )
-  const versions = getVersions(pkg)
+export const getSupportedFabricVersions = () => {
+  const versions = getVersions('fabric')
   return computed(() => {
-    if (unref(nightly)) return versions.value
-    return versions.value.filter((version) => gte(version, '1.1.0-beta.18'))
+    return versions.value.filter((version) => gte(version, '6.0.0'))
   })
 }

@@ -54,7 +54,9 @@ export default defineConfig({
       dts: path.resolve(pathSrc, 'components.d.ts'),
     }),
     Unocss(),
-    Mkcert(),
+    Mkcert({
+      mkcertPath: 'E:\\github\\element-plus-playground\\mkcert.exe',
+    }),
     Inspect(),
   ],
   optimizeDeps: {

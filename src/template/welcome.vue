@@ -1,17 +1,33 @@
 <script setup lang="ts">
-import { ElementPlus } from '@element-plus/icons-vue'
-import { version as epVersion } from 'element-plus'
-import { ref, version as vueVersion } from 'vue'
+import * as fabric from 'fabric'
+import {
+  getCurrentInstance,
+  onMounted,
+  ref,
+  version as vueVersion,
+  type ComponentInternalInstance,
+} from 'vue'
 
 const msg = ref('Hello World!')
+const fabricVersion = fabric.version
+onMounted(() => {
+  const canvas = new fabric.Canvas('game')
+  const rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: 'red',
+    width: 20,
+    height: 20,
+  })
+
+  // "add" rectangle onto canvas
+  canvas.add(rect)
+})
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
-  <el-input v-model="msg" />
+  <canvas id="game" width="600" height="400" />
 
-  <p>
-    <el-icon color="var(--el-color-primary)"><ElementPlus /></el-icon>
-    Element Plus {{ epVersion }} + Vue {{ vueVersion }}
-  </p>
+  <p>Fabric Js {{ fabricVersion }} + Vue {{ vueVersion }}</p>
 </template>

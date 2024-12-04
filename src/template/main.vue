@@ -1,7 +1,7 @@
 <script setup>
 import App from './App.vue'
-import { setupElementPlus } from './element-plus.js'
-setupElementPlus()
+import { setupFabricJs } from './fabric-plugin.js'
+setupFabricJs()
 </script>
 
 <template>

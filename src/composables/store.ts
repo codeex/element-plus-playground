@@ -14,7 +14,7 @@ import {
   genImportMap,
 } from '@/utils/dependency'
 import { atou, utoa } from '@/utils/encode'
-import elementPlusCode from '../template/element-plus.js?raw'
+import fabricJsCode from '../template/fabric-plugin.js?raw'
 import mainCode from '../template/main.vue?raw'
 import tsconfigCode from '../template/tsconfig.json?raw'
 import welcomeCode from '../template/welcome.vue?raw'
@@ -23,7 +23,7 @@ export interface Initial {
   serializedState?: string
   initialized?: () => void
 }
-export type VersionKey = 'vue' | 'elementPlus' | 'typescript'
+export type VersionKey = 'vue' | 'fabric' | 'typescript'
 export type Versions = Record<VersionKey, string>
 export interface UserOptions {
   styleSource?: string
@@ -35,7 +35,7 @@ export type SerializeState = Record<string, string> & {
 
 const MAIN_FILE = 'src/PlaygroundMain.vue'
 const APP_FILE = 'src/App.vue'
-const ELEMENT_PLUS_FILE = 'src/element-plus.js'
+const FABRIC_FILE = 'src/fabric-plugin.js'
 const LEGACY_IMPORT_MAP = 'src/import_map.json'
 export const IMPORT_MAP = 'import-map.json'
 export const TSCONFIG = 'tsconfig.json'
@@ -49,7 +49,7 @@ export const useStore = (initial: Initial) => {
     saved?._o?.styleSource?.split('-', 2)[1]
   const versions = reactive<Versions>({
     vue: 'latest',
-    elementPlus: pr ? 'preview' : 'latest',
+    fabric: 'latest',
     typescript: 'latest',
   })
   const userOptions: UserOptions = pr
@@ -62,14 +62,14 @@ export const useStore = (initial: Initial) => {
 
   const [nightly, toggleNightly] = useToggle(false)
   const builtinImportMap = computed<ImportMap>(() => {
-    let importMap = genImportMap(versions, nightly.value)
-    if (pr)
-      importMap = mergeImportMap(importMap, {
-        imports: {
-          'element-plus': `https://preview-${pr}-element-plus.surge.sh/bundle/index.full.min.mjs`,
-          'element-plus/': 'unsupported',
-        },
-      })
+    const importMap = genImportMap(versions)
+    // if (pr)
+    //   importMap = mergeImportMap(importMap, {
+    //     imports: {
+    //       'element-plus': `https://preview-${pr}-element-plus.surge.sh/bundle/index.full.min.mjs`,
+    //       'element-plus/': 'unsupported',
+    //     },
+    //   })
     return importMap
   })
 
@@ -92,20 +92,20 @@ export const useStore = (initial: Initial) => {
     }),
   )
   const store = useReplStore(storeState)
-  store.files[ELEMENT_PLUS_FILE].hidden = hideFile
+  store.files[FABRIC_FILE].hidden = hideFile
   store.files[MAIN_FILE].hidden = hideFile
   setVueVersion(versions.vue).then(() => {
     initial.initialized?.()
   })
 
   watch(
-    () => versions.elementPlus,
+    () => versions.fabric,
     (version) => {
-      store.files[ELEMENT_PLUS_FILE].code = generateElementPlusCode(
+      store.files[FABRIC_FILE].code = generateElementPlusCode(
         version,
         userOptions.styleSource,
       ).trim()
-      compileFile(store, store.files[ELEMENT_PLUS_FILE]).then(
+      compileFile(store, store.files[FABRIC_FILE]).then(
         (errs) => (store.errors = errs),
       )
     },
@@ -135,7 +135,7 @@ export const useStore = (initial: Initial) => {
       '/dist/index.css',
       '/theme-chalk/dark/css-vars.css',
     )
-    return elementPlusCode
+    return fabricJsCode
       .replace('#STYLE#', style)
       .replace('#DARKSTYLE#', darkStyle)
   }
@@ -187,10 +187,10 @@ export const useStore = (initial: Initial) => {
     } else {
       files[APP_FILE] = new File(APP_FILE, welcomeCode)
     }
-    if (!files[ELEMENT_PLUS_FILE]) {
-      files[ELEMENT_PLUS_FILE] = new File(
-        ELEMENT_PLUS_FILE,
-        generateElementPlusCode(versions.elementPlus, userOptions.styleSource),
+    if (!files[FABRIC_FILE]) {
+      files[FABRIC_FILE] = new File(
+        FABRIC_FILE,
+        generateElementPlusCode(versions.fabric, userOptions.styleSource),
       )
     }
     if (!files[TSCONFIG]) {
@@ -209,8 +209,8 @@ export const useStore = (initial: Initial) => {
       case 'vue':
         await setVueVersion(version)
         break
-      case 'elementPlus':
-        versions.elementPlus = version
+      case 'fabric':
+        versions.fabric = version
         break
       case 'typescript':
         store.typescriptVersion = version

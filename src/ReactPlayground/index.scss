@@ -1,0 +1,16 @@
+.light {
+  --text: #444;
+  --bg: #fff;
+  --light: #698099;
+}
+
+.dark {
+  --text: #fff;
+  --bg: #1a1a1a;
+  --light: #093d6d;
+}
+
+.mainSpan{
+  height: calc(100% - 56px)
+}
+

@@ -1,0 +1,33 @@
+.header {
+  height: 50px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #000;
+  background-color: var(--bg);
+  color: var(--text);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 0 6px  var(--light);
+  margin-bottom: 6px;
+
+
+  .logo {
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+
+    img {
+      height: 24px;
+      margin-right: 10px;
+    }
+  }
+  a{
+    color: var(--text);
+    text-decoration: none;
+  }
+  a:hover{color: var(--text);
+  text-decoration: none;
+}
+}

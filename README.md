@@ -1,17 +1,11 @@
-<p align="center">
-  <img width="300px" src="https://user-images.githubusercontent.com/10731096/95823103-9ce15780-0d5f-11eb-8010-1bd1b5910d4f.png">
-</p>
+# Fabric Js Playground
 
-# Element Plus Playground
+## 下载与分享
 
-[![GitHub Pages](https://github.com/element-plus/element-plus-playground/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/element-plus/element-plus-playground/actions/workflows/gh-pages.yml)
+分享代码就是将`files`对象通过`JSON.stringfy`并压缩后保存到`location.hash`中，并复制链接到剪贴板。然后初始化的时候从`location.hash`读取出来`JSON.parse`并解压缩。压缩用的是`fflate`包。
 
-You can go to [element-plus.run](https://element-plus.run/) to have a try! 😆
+代码下载则是基于`jszip`和`file-saver`包实现的。
 
-## Credits
+##  代码在 React Playground 上改造  
 
-- [vuejs/repl](https://github.com/vuejs/repl)
-
-## License
-
-[MIT](./LICENSE) License © 2021-PRESENT [三咲智子](https://github.com/sxzz)
+  感谢 React Playground 作者
